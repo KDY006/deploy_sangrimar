@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sangrimar Cafe &amp; Lounge - Đăng nhập</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="css/mossary.css" rel="stylesheet" />
+</head>
+<body class="d-flex flex-column min-vh-100 position-relative">
+    <div class="login-bg-layer">
+    <div id="login-bg-parallax" class="login-bg-parallax">
+      <img
+        src="assets/Gemini_Generated_Image_ehf4p1ehf4p1ehf4_8bd10c52.png"
+        alt="Pha chế cà phê espresso tại quầy"
+        referrerpolicy="no-referrer"
+      />
+    </div>
+    <div class="login-bg-veil"></div>
+  </div>
+
+    <header class="login-header px-4 px-sm-5 d-flex align-items-center">
+    <div class="d-flex align-items-center gap-2">
+      <span class="brand-badge"><i class="bi bi-cup-hot-fill"></i></span>
+      <span class="font-display fw-bold text-dark fs-5" style="letter-spacing:-0.02em;">Sangrimar Cafe &amp; Lounge</span>
+    </div>
+  </header>
+
+    <main class="position-relative z-1 flex-grow-1 d-flex align-items-center py-4 py-lg-5">
+    <div class="container-xxl px-3 px-sm-5">
+      <div class="row g-4 g-lg-5 align-items-center">
+        <div class="d-none d-lg-block col-lg-7" aria-hidden="true"></div>
+
+                <div class="col-lg-5">
+          <div class="login-card p-4 p-sm-5">
+            <div class="pb-3 border-bottom" style="border-color:var(--border-subtle) !important;">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="brand-badge" style="width:30px;height:30px;font-size:14px;"><i class="bi bi-cup-hot-fill"></i></span>
+                <span class="font-display fw-bold text-dark fs-5" style="letter-spacing:-0.02em;">Sangrimar Cafe &amp; Lounge</span>
+              </div>
+              <p class="mb-0 text-muted" style="font-size:0.8rem;">Hệ thống bán hàng và quản lý quán cà phê POS</p>
+            </div>
+
+            <form id="login-form" class="mt-4">
+              <div class="mb-3">
+                <label for="login-username" class="form-label fw-semibold" style="font-size:0.78rem;color:var(--text-secondary);">
+                  Tên đăng nhập
+                </label>
+                <div class="position-relative">
+                  <i class="bi bi-person position-absolute top-50 translate-middle-y ms-3" style="color:var(--text-muted);"></i>
+                  <input
+                    id="login-username"
+                    type="text"
+                    class="form-control moss-input ps-5"
+                    style="height:44px;"
+                    placeholder="Tên đăng nhập"
+                    autocomplete="username"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="login-password" class="form-label fw-semibold" style="font-size:0.78rem;color:var(--text-secondary);">
+                  Mật khẩu
+                </label>
+                <div class="position-relative">
+                  <i class="bi bi-lock position-absolute top-50 translate-middle-y ms-3" style="color:var(--text-muted);"></i>
+                  <input
+                    id="login-password"
+                    type="password"
+                    class="form-control moss-input ps-5"
+                    style="height:44px;"
+                    placeholder="Mật khẩu"
+                    autocomplete="current-password"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div id="login-error" class="alert alert-danger py-2 px-3 rounded-3 d-none" style="font-size:0.8rem;" role="alert"></div>
+
+              <button
+                id="btn-login-submit"
+                type="submit"
+                class="btn btn-moss w-100 d-flex align-items-center justify-content-center gap-2 mt-3"
+                style="height:48px;font-size:0.9rem;"
+              >
+                <span id="login-btn-text">Đăng nhập</span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
+
+                            <div class="mt-3">
+                <div class="text-center text-muted mb-2" style="font-size:0.75rem;">— Chọn nhanh vai trò —</div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary flex-grow-1" id="btn-quick-quanly" style="font-size:0.75rem;">
+                    <i class="bi bi-shield-lock me-1"></i>Quản lý
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary flex-grow-1" id="btn-quick-thungan" style="font-size:0.75rem;">
+                    <i class="bi bi-cash-coin me-1"></i>Thu ngân
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary flex-grow-1" id="btn-quick-phucvu" style="font-size:0.75rem;">
+                    <i class="bi bi-cup-hot me-1"></i>Phục vụ
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="mt-4 pt-3 border-top text-center" style="border-color:var(--border-subtle) !important;font-size:0.75rem;color:var(--text-secondary);"><span>Hệ thống quản lý bán hàng &amp; vận hành Sangrimar Cafe &amp; Lounge</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/dung-chung.js"></script>
+  <script>
+    (function () {
+      function redirectAfterLogin(u) {
+        if (!u) {
+          window.location.href = 'banhang.html';
+          return;
+        }
+        var role = String(u.vaiTro || '').toUpperCase();
+        if (role === 'QUAN_LY' || role === 'MANAGER' || role === 'ADMIN') {
+          window.location.href = 'kho.html';
+        } else {
+          window.location.href = 'banhang.html';
+        }
+      }
+
+      var existingUser = MocAn.getCurrentUser();
+      if (existingUser && existingUser.tenDangNhap) {
+        redirectAfterLogin(existingUser);
+        return;
+      }
+
+      var form = document.getElementById('login-form');
+      var errEl = document.getElementById('login-error');
+      var btn = document.getElementById('btn-login-submit');
+      var btnText = document.getElementById('login-btn-text');
+
+            var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('expired') === '1') {
+        errEl.textContent = 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.';
+        errEl.className = 'alert alert-warning py-2 px-3 rounded-3';
+      }
+
+            function setCredentials(user, pass) {
+        document.getElementById('login-username').value = user;
+        document.getElementById('login-password').value = pass;
+        errEl.className = 'alert alert-danger py-2 px-3 rounded-3 d-none';
+      }
+
+      var qQuanLy = document.getElementById('btn-quick-quanly');
+      if (qQuanLy) qQuanLy.addEventListener('click', function () { setCredentials('quanly', 'quanly'); });
+      var qThuNgan = document.getElementById('btn-quick-thungan');
+      if (qThuNgan) qThuNgan.addEventListener('click', function () { setCredentials('thungan', 'thungan'); });
+      var qPhucVu = document.getElementById('btn-quick-phucvu');
+      if (qPhucVu) qPhucVu.addEventListener('click', function () { setCredentials('phucvu', 'phucvu'); });
+
+            var parallax = document.getElementById('login-bg-parallax');
+      if (parallax) {
+        document.addEventListener('pointermove', function (e) {
+          var nx = (e.clientX / Math.max(1, window.innerWidth)) - 0.5;
+          var ny = (e.clientY / Math.max(1, window.innerHeight)) - 0.5;
+          var dx = Math.max(-8, Math.min(8, -nx * 14));
+          var dy = Math.max(-6, Math.min(6, -ny * 10));
+          parallax.style.transform = 'scale(1.04) translate(' + dx.toFixed(1) + 'px, ' + dy.toFixed(1) + 'px)';
+        });
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        errEl.className = 'alert alert-danger py-2 px-3 rounded-3 d-none';
+        btn.disabled = true;
+        btnText.textContent = 'Đang xác thực...';
+
+        try {
+          var data = await MocAn.apiFetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tenDangNhap: document.getElementById('login-username').value,
+              matKhau: document.getElementById('login-password').value
+            })
+          });
+          MocAn.setCurrentUser(data);
+          redirectAfterLogin(data);
+        } catch (err) {
+          errEl.textContent = err.message || 'Đăng nhập thất bại.';
+          errEl.className = 'alert alert-danger py-2 px-3 rounded-3';
+        } finally {
+          btn.disabled = false;
+          btnText.textContent = 'Đăng nhập';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

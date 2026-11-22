@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sangrimar Cafe &amp; Lounge - Quản lý Kho, BOM &amp; KPI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="css/mossary.css" rel="stylesheet" />
+  <style>
+    .kpi-card {
+      background: var(--bg-surface, #ffffff);
+      border: 1px solid var(--border-subtle, #e5e7eb);
+      border-radius: 14px;
+      padding: 16px 18px;
+      transition: box-shadow 0.2s ease;
+    }
+    .kpi-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .kpi-title {
+      font-size: 0.78rem;
+      color: var(--text-secondary, #6b7280);
+      font-weight: 500;
+    }
+    .kpi-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary, #111827);
+      margin-top: 4px;
+      margin-bottom: 2px;
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted, #9ca3af);
+    }
+    .period-pill {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-default, #d1d5db);
+      background: var(--bg-surface, #ffffff);
+      color: var(--text-secondary, #4b5563);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .period-pill:hover {
+      background: var(--bg-surface-hover, #f3f4f6);
+      color: var(--text-primary, #111827);
+    }
+    .period-pill.active {
+      background: var(--brand-primary, #5D4037);
+      color: #ffffff;
+      border-color: var(--brand-primary, #5D4037);
+    }
+    .nav-tab-btn {
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: none;
+      color: var(--text-secondary, #6b7280);
+      cursor: pointer;
+    }
+    .nav-tab-btn.active {
+      color: var(--brand-primary, #5D4037);
+      border-bottom-color: var(--brand-primary, #5D4037);
+    }
+    .badge-audit-nhap {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .badge-audit-xuat {
+      background-color: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .badge-audit-haohut {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .table-sm-custom td, .table-sm-custom th {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <div id="app-sidebar-root"></div>
+
+    <div class="flex-grow-1 d-flex flex-column min-w-0">
+      <div id="app-topbar-root"></div>
+
+      <main class="p-3 p-sm-4 mx-auto w-100 d-flex flex-column gap-3" style="max-width:1440px;">
+        
+                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 pt-1">
+          <div>
+            <h1 class="font-display fw-bold mb-1" style="font-size:1.4rem;color:var(--text-primary,#111827);">
+              Kho nguyên liệu, Định mức BOM &amp; Báo cáo KPI
+            </h1>
+            <p class="mb-0 text-muted" style="font-size:0.82rem;">
+              Hệ thống Quản lý Sangrimar Cafe &amp; Lounge · Truy vết biến động kho &amp; Đối soát doanh thu
+            </p>
+          </div>
+
+                    <div class="d-flex align-items-center gap-1 bg-white p-1 rounded-3 border" style="border-color:var(--border-subtle,#e5e7eb)!important;">
+            <button type="button" class="period-pill active" data-period="HOM_NAY">Hôm nay</button>
+            <button type="button" class="period-pill" data-period="BAY_NGAY">7 ngày</button>
+            <button type="button" class="period-pill" data-period="THANG_NAY">Tháng này</button>
+            <button type="button" class="period-pill" data-period="TAT_CA">Tất cả</button>
+          </div>
+        </div>
+
+                <div class="row g-3">
+                              <div class="col-12 col-md-4">
+            <div class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Doanh thu thuần</span>
+                <span class="badge bg-light text-dark border"><i class="bi bi-cash-stack text-success me-1"></i>Đã thu</span>
+              </div>
+              <div>
+                <div id="kpi-revenue" class="kpi-value font-mono">0 đ</div>
+                <div id="kpi-orders-discount" class="kpi-sub">0 đơn hàng · Chiết khấu: 0 đ</div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="col-12 col-md-4">
+            <div class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Lợi nhuận gộp ước tính</span>
+                <span class="badge bg-light text-dark border"><i class="bi bi-graph-up-arrow text-primary me-1"></i>Doanh thu - Vốn - Hao hụt</span>
+              </div>
+              <div>
+                <div id="kpi-profit" class="kpi-value font-mono text-success">0 đ</div>
+                <div id="kpi-cogs-loss" class="kpi-sub">Giá vốn: 0 đ · Hao hụt: 0 đ</div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="col-12 col-md-4">
+            <div class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Đối soát Tiền mặt vs Chuyển khoản</span>
+                <span class="badge bg-light text-dark border"><i class="bi bi-credit-card-2-front text-info me-1"></i>Hình thức TT</span>
+              </div>
+              <div>
+                <div id="kpi-payment-split" class="d-flex justify-content-between align-items-center mt-2">
+                  <div class="font-mono" style="font-size:0.92rem;">
+                    <span class="text-muted" style="font-size:0.75rem;">Tiền mặt:</span> <strong id="kpi-cash-val">0 đ</strong> <small class="text-muted" id="kpi-cash-count">(0)</small>
+                  </div>
+                  <div class="font-mono text-end" style="font-size:0.92rem;">
+                    <span class="text-muted" style="font-size:0.75rem;">CK:</span> <strong id="kpi-transfer-val">0 đ</strong> <small class="text-muted" id="kpi-transfer-count">(0)</small>
+                  </div>
+                </div>
+                <div class="progress mt-2" style="height:6px;">
+                  <div id="kpi-cash-bar" class="progress-bar bg-success" style="width: 50%;"></div>
+                  <div id="kpi-transfer-bar" class="progress-bar bg-primary" style="width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                              <div class="col-12 col-md-4">
+            <div class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Tổng giá trị tồn kho</span>
+                <span class="badge bg-light text-dark border"><i class="bi bi-boxes text-secondary me-1"></i>Hiện hành</span>
+              </div>
+              <div>
+                <div id="kpi-stock-val" class="kpi-value font-mono">0 đ</div>
+                <div id="kpi-stock-count" class="kpi-sub">13 nguyên liệu pha chế</div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="col-12 col-md-4">
+            <div class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Chi phí nhập kho trong kỳ</span>
+                <span class="badge bg-light text-dark border"><i class="bi bi-truck text-warning me-1"></i>Mua hàng</span>
+              </div>
+              <div>
+                <div id="kpi-restock-cost" class="kpi-value font-mono">0 đ</div>
+                <div class="kpi-sub">Tổng tiền nhập hàng lô mới</div>
+              </div>
+            </div>
+          </div>
+
+                    <div class="col-12 col-md-4">
+            <div id="kpi-low-stock-card" class="kpi-card h-100 d-flex flex-column justify-content-between">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="kpi-title text-uppercase">Cảnh báo sắp hết hàng</span>
+                <span id="kpi-low-badge" class="badge bg-success-subtle text-success border border-success-subtle">An toàn</span>
+              </div>
+              <div>
+                <div id="kpi-low-stock-val" class="kpi-value font-mono text-success">0 / 13</div>
+                <div id="kpi-low-stock-desc" class="kpi-sub">Tồn kho trên ngưỡng tối thiểu</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+                <div id="low-stock-banner" class="d-none"></div>
+
+                <div id="kho-feedback" class="alert alert-success py-2 px-3 mb-0 rounded-3 d-none d-flex align-items-center justify-content-between" style="font-size:0.82rem;"></div>
+        <div id="kho-error" class="alert alert-danger py-2 px-3 mb-0 rounded-3 d-none d-flex align-items-center justify-content-between" style="font-size:0.82rem;"></div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-xl-8">
+            <div class="moss-card p-3 p-sm-4">
+                            <div class="d-flex align-items-center border-bottom mb-3 pb-1 gap-2 flex-wrap" style="border-color:var(--border-subtle,#e5e7eb)!important;">
+                <button type="button" class="nav-tab-btn active" data-tab="tab-inventory">
+                  <i class="bi bi-box-seam me-1"></i>Tồn kho nguyên liệu
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="tab-bom">
+                  <i class="bi bi-journal-check me-1"></i>Định mức công thức (BOM)
+                </button>
+                <button type="button" class="nav-tab-btn" data-tab="tab-history">
+                  <i class="bi bi-clock-history me-1"></i>Nhật ký biến động kho
+                </button>
+              </div>
+
+                            <div id="tab-inventory-pane" class="tab-pane-content">
+                <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-3">
+                  <div class="position-relative flex-grow-1" style="max-width:320px;">
+                    <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                    <input id="ing-search" type="search" class="form-control moss-input ps-5" placeholder="Tìm tên nguyên liệu..." style="height:38px;font-size:0.82rem;" />
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <button id="btn-filter-low" type="button" class="btn btn-sm btn-outline-secondary rounded-3 fw-semibold" style="height:38px;font-size:0.8rem;">
+                      <i class="bi bi-funnel me-1"></i>Chỉ xem sắp hết (<span id="low-filter-count">0</span>)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-moss table-sm-custom mb-0" style="font-size:0.84rem;">
+                    <thead>
+                      <tr class="text-muted" style="font-size:0.75rem;">
+                        <th>Nguyên liệu</th>
+                        <th>Danh mục</th>
+                        <th class="text-end">Tồn kho</th>
+                        <th class="text-end">Ngưỡng min</th>
+                        <th class="text-end">Giá vốn bình quân</th>
+                        <th class="text-end">Tổng giá trị</th>
+                        <th>Tình trạng</th>
+                        <th class="text-end" style="min-width:170px;">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ingredients-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+                            <div id="tab-bom-pane" class="tab-pane-content d-none">
+                <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-3">
+                  <div class="position-relative flex-grow-1" style="max-width:320px;">
+                    <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+                    <input id="bom-search" type="search" class="form-control moss-input ps-5" placeholder="Tìm tên món nước..." style="height:38px;font-size:0.82rem;" />
+                  </div>
+                  <div class="text-muted" style="font-size:0.78rem;">
+                    <i class="bi bi-info-circle me-1"></i>Định mức nguyên liệu theo từng ly đồ uống niêm yết
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table table-moss table-sm-custom mb-0" style="font-size:0.84rem;">
+                    <thead>
+                      <tr class="text-muted" style="font-size:0.75rem;">
+                        <th>Món nước</th>
+                        <th class="text-end">Giá bán</th>
+                        <th>Định mức thành phần (BOM)</th>
+                        <th class="text-end">Giá vốn/ly</th>
+                        <th class="text-end">Biên LN gộp</th>
+                        <th class="text-center">Pha tối đa</th>
+                        <th class="text-end">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="bom-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+                            <div id="tab-history-pane" class="tab-pane-content d-none">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                  <select id="filter-history-type" class="form-select form-select-sm moss-input" style="width:auto;height:38px;font-size:0.8rem;">
+                    <option value="">Tất cả loại giao dịch</option>
+                    <option value="NHAP_KHO">Nhập kho</option>
+                    <option value="XUAT_BAN_HANG">Xuất bán hàng</option>
+                    <option value="KIEM_KE_HAO_HUT">Kiểm kê hao hụt</option>
+                  </select>
+
+                  <select id="filter-history-nl" class="form-select form-select-sm moss-input" style="width:auto;height:38px;font-size:0.8rem;">
+                    <option value="">Tất cả nguyên liệu</option>
+                  </select>
+
+                  <button id="btn-refresh-history" class="btn btn-sm btn-outline-secondary rounded-3" style="height:38px;">
+                    <i class="bi bi-arrow-clockwise"></i> Tải lại
+                  </button>
+                </div>
+
+                <div class="table-responsive" style="max-height:480px;overflow-y:auto;">
+                  <table class="table table-moss table-sm-custom mb-0" style="font-size:0.82rem;">
+                    <thead>
+                      <tr class="text-muted" style="font-size:0.75rem;">
+                        <th>Thời gian</th>
+                        <th>Loại GD</th>
+                        <th>Nguyên liệu</th>
+                        <th class="text-end">Thay đổi</th>
+                        <th class="text-end">Tồn trước &rarr; sau</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                        <th>Nhân sự</th>
+                        <th>Ghi chú / Chứng từ</th>
+                      </tr>
+                    </thead>
+                    <tbody id="history-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+                    <div class="col-12 col-xl-4">
+            <div class="moss-card p-3 p-sm-4 h-100 d-flex flex-column">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="font-display fw-semibold mb-0" style="font-size:1.05rem;">
+                  <i class="bi bi-trophy-fill text-warning me-1"></i>Top 5 Món Bán Chạy
+                </h2>
+                <span id="top-seller-period-label" class="badge bg-light text-dark border" style="font-size:0.72rem;">Hôm nay</span>
+              </div>
+              <div id="top-selling-list" class="d-flex flex-column gap-2 flex-grow-1"></div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+    <div class="modal fade" id="restockModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="restock-form" class="modal-content">
+        <div class="modal-body p-4 d-flex flex-column gap-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <h3 id="restock-modal-title" class="font-display fw-bold mb-0" style="font-size:1.05rem;">Nhập kho nguyên liệu</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+          
+          <div id="restock-modal-info" class="p-2 rounded-3 bg-light font-mono" style="font-size:0.8rem;"></div>
+
+          <div>
+            <label for="restock-amount" class="form-label fw-semibold" style="font-size:0.8rem;">Số lượng nhập thêm (<span id="restock-unit-label"></span>)</label>
+            <input id="restock-amount" type="number" min="0.1" step="any" required placeholder="Nhập số lượng..." class="form-control moss-input font-mono" />
+            <div class="d-flex gap-2 mt-2">
+              <button type="button" data-preset="100" class="btn btn-sm btn-light border flex-fill font-mono preset-btn">+100</button>
+              <button type="button" data-preset="500" class="btn btn-sm btn-light border flex-fill font-mono preset-btn">+500</button>
+              <button type="button" data-preset="1000" class="btn btn-sm btn-light border flex-fill font-mono preset-btn">+1000</button>
+            </div>
+          </div>
+
+          <div>
+            <label for="restock-price" class="form-label fw-semibold" style="font-size:0.8rem;">Đơn giá nhập lô mới (VNĐ / đơn vị)</label>
+            <input id="restock-price" type="number" min="0" step="any" placeholder="Để trống nếu giữ giá cũ..." class="form-control moss-input font-mono" />
+            <small class="text-muted" style="font-size:0.75rem;">Hệ thống sẽ tự động cập nhật giá vốn theo Bình quân gia quyền (Weighted Average Cost).</small>
+          </div>
+
+          <div>
+            <label for="restock-supplier" class="form-label fw-semibold" style="font-size:0.8rem;">Nhà cung cấp</label>
+            <input id="restock-supplier" type="text" placeholder="Vd: Đại lý Vinamilk Q7, Tổng kho Buôn Ma Thuột..." class="form-control moss-input" />
+          </div>
+
+          <div>
+            <label for="restock-note" class="form-label fw-semibold" style="font-size:0.8rem;">Ghi chú nhập kho</label>
+            <input id="restock-note" type="text" placeholder="Vd: Nhập bổ sung đầu ca, hóa đơn #..." class="form-control moss-input" />
+          </div>
+
+          <div class="p-2 rounded-3 bg-light border d-flex justify-content-between align-items-center">
+            <span style="font-size:0.8rem;color:var(--text-secondary);">Thành tiền ước tính:</span>
+            <strong id="restock-preview-total" class="font-mono text-primary" style="font-size:0.95rem;">0 đ</strong>
+          </div>
+
+          <div class="d-flex gap-2 pt-2">
+            <button type="button" class="btn btn-outline-secondary flex-fill rounded-3" data-bs-dismiss="modal">Hủy</button>
+            <button id="btn-restock-submit" type="submit" class="btn btn-forest flex-fill">Xác nhận nhập kho</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <div class="modal fade" id="auditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="audit-form" class="modal-content">
+        <div class="modal-body p-4 d-flex flex-column gap-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <h3 id="audit-modal-title" class="font-display fw-bold mb-0" style="font-size:1.05rem;">Kiểm kê &amp; Điều chỉnh tồn kho</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+
+          <div id="audit-modal-info" class="p-2 rounded-3 bg-light font-mono" style="font-size:0.8rem;"></div>
+
+          <div>
+            <label for="audit-actual-amount" class="form-label fw-semibold" style="font-size:0.8rem;">Số lượng tồn thực tế đếm được (<span id="audit-unit-label"></span>)</label>
+            <input id="audit-actual-amount" type="number" min="0" step="any" required placeholder="Nhập số thực tế..." class="form-control moss-input font-mono" />
+          </div>
+
+          <div class="p-3 rounded-3 border bg-light d-flex flex-column gap-1">
+            <div class="d-flex justify-content-between" style="font-size:0.8rem;">
+              <span>Chênh lệch điều chỉnh (&Delta;):</span>
+              <strong id="audit-delta" class="font-mono">0</strong>
+            </div>
+            <div class="d-flex justify-content-between" style="font-size:0.8rem;">
+              <span>Giá trị hao hụt ước tính:</span>
+              <strong id="audit-loss-value" class="font-mono text-danger">0 đ</strong>
+            </div>
+          </div>
+
+          <div>
+            <label for="audit-reason" class="form-label fw-semibold" style="font-size:0.8rem;">Lý do điều chỉnh / Hao hụt <span class="text-danger">*</span></label>
+            <textarea id="audit-reason" rows="2" required placeholder="Bắt buộc nhập lý do (Vd: Đánh bọt sữa hao hụt, quá hạn sử dụng, đổ vỡ...)" class="form-control moss-input"></textarea>
+          </div>
+
+          <div class="d-flex gap-2 pt-2">
+            <button type="button" class="btn btn-outline-secondary flex-fill rounded-3" data-bs-dismiss="modal">Hủy</button>
+            <button id="btn-audit-submit" type="submit" class="btn btn-warning flex-fill fw-semibold">Xác nhận điều chỉnh</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+    <div class="modal fade" id="recipeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="recipe-form" class="modal-content">
+        <div class="modal-body p-4 d-flex flex-column gap-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <h3 id="recipe-modal-title" class="font-display fw-bold mb-0" style="font-size:1.05rem;">Sửa định mức công thức</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+
+          <div id="recipe-modal-drink-name" class="fw-bold text-primary" style="font-size:0.95rem;"></div>
+
+          <div>
+            <label for="recipe-select-nl" class="form-label fw-semibold" style="font-size:0.8rem;">Nguyên liệu</label>
+            <select id="recipe-select-nl" class="form-select moss-input" required></select>
+          </div>
+
+          <div>
+            <label for="recipe-amount" class="form-label fw-semibold" style="font-size:0.8rem;">Định mức cho 1 ly (<span id="recipe-unit-hint">ml / g</span>)</label>
+            <input id="recipe-amount" type="number" min="0.1" step="any" required placeholder="Vd: 25..." class="form-control moss-input font-mono" />
+          </div>
+
+          <div>
+            <label for="recipe-note" class="form-label fw-semibold" style="font-size:0.8rem;">Ghi chú pha chế</label>
+            <input id="recipe-note" type="text" placeholder="Vd: Đánh bọt, ủ lạnh 12h..." class="form-control moss-input" />
+          </div>
+
+          <div class="d-flex gap-2 pt-2">
+            <button type="button" class="btn btn-outline-secondary flex-fill rounded-3" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-forest flex-fill">Lưu công thức</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/dung-chung.js"></script>
+  <script src="js/kho-page.js"></script>
+</body>
+</html>
